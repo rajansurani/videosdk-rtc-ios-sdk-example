@@ -16,40 +16,40 @@ jobs:
     #     restore-keys: |
     #       ${{ runner.os }}-pods-
 
-    - name: Install Apple Certificate
-      uses: apple-actions/import-codesign-certs@v1
-      with:
-        p12-file-base64: ${{ secrets.P12_BASE64 }}
-        p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
-    - name: Install the provisioning profile
-      env:
-        PROVISIONING_CERTIFICATE_BASE64: ${{ secrets.MOBILEPROVISION_BASE64 }}
-      run: |
-        PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
-        echo -n "$PROVISIONING_CERTIFICATE_BASE64" | base64 --decode --output $PP_PATH
-        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+    # - name: Install Apple Certificate
+    #   uses: apple-actions/import-codesign-certs@v1
+    #   with:
+    #     p12-file-base64: ${{ secrets.P12_BASE64 }}
+    #     p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+    # - name: Install the provisioning profile
+    #   env:
+    #     PROVISIONING_CERTIFICATE_BASE64: ${{ secrets.MOBILEPROVISION_BASE64 }}
+    #   run: |
+    #     PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+    #     echo -n "$PROVISIONING_CERTIFICATE_BASE64" | base64 --decode --output $PP_PATH
+    #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+    #     cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
     
     - name: Install Pods
       run: pod install
 
-    - name: build Archive
-      run: xcodebuild -workspace VideoSDK.xcworkspace -scheme VideoSDK-Example -destination generic/platform=iOS -configuration Release archive -archivePath VideoSDK.xcarchive clean
+    # - name: build Archive
+    #   run: xcodebuild -workspace VideoSDK.xcworkspace -scheme VideoSDK-Example -destination generic/platform=iOS -configuration Release archive -archivePath VideoSDK.xcarchive clean
   
-    - name: Export ipa
-      run: xcodebuild -exportArchive -archivePath VideoSDK.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./ -allowProvisioningUpdates
-    # - name: Build IOS App
-    #   uses: sparkfabrik/ios-build-action@v1.2.0
-    #   with:
-    #     project-path: VideoSDK.xcodeproj
-    #     p12-base64: ${{ secrets.P12_BASE64 }}
-    #     mobileprovision-base64: ${{ secrets.MOBILEPROVISION_BASE64 }}
-    #     code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
-    #     team-id: ${{ secrets.TEAM_ID }}
-    #     certificate-password: ${{ secrets.CERTIFICATE_PASSWORD}}
-    #     workspace-path: VideoSDK.xcworkspace # optional
-    #     export-options: ExportOptions.plist
-        # scheme: VideoSDK
+    # - name: Export ipa
+    #   run: xcodebuild -exportArchive -archivePath VideoSDK.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./ -allowProvisioningUpdates
+    - name: Build IOS App
+      uses: sparkfabrik/ios-build-action@v1.2.0
+      with:
+        project-path: VideoSDK.xcodeproj
+        p12-base64: ${{ secrets.P12_BASE64 }}
+        mobileprovision-base64: ${{ secrets.MOBILEPROVISION_BASE64 }}
+        code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
+        team-id: ${{ secrets.TEAM_ID }}
+        certificate-password: ${{ secrets.CERTIFICATE_PASSWORD}}
+        workspace-path: VideoSDK.xcworkspace # optional
+        export-options: ExportOptions.plist
+        scheme: VideoSDK-Example
 
 #     - name: 'Upload app to TestFlight'
 #       uses: apple-actions/upload-testflight-build@v1
