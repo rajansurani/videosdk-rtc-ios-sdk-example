@@ -49,6 +49,7 @@ jobs:
         certificate-password: ${{ secrets.CERTIFICATE_PASSWORD}}
         workspace-path: VideoSDK.xcworkspace # optional
         export-options: ExportOptions.plist
+        export-method: "app-store"
         # scheme: VideoSDK-Example
 
 #     - name: 'Upload app to TestFlight'
