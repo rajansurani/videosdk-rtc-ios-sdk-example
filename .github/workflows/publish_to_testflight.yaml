@@ -28,7 +28,8 @@ jobs:
         team-id: ${{ secrets.TEAM_ID }}
         certificate-password: ${{ secrets.CERTIFICATE_PASSWORD}}
         workspace-path: VideoSDK.xcworkspace # optional
-        export-options: ExportOptions.plist
+        # export-options: ExportOptions.plist
+        destinaition: ""
 
 #     - name: 'Upload app to TestFlight'
 #       uses: apple-actions/upload-testflight-build@v1
